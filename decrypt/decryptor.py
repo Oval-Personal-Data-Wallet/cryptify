@@ -12,9 +12,8 @@ def decode_file(encoded_file_path):
     with open(encoded_file_path, "rb") as encoded_file:
         encoded_file_data = encoded_file.read()
 
-    encrypted_key, _, original_extension, encrypted_file_data = encoded_file_data.split(
+    encrypted_key, salt, original_extension, encrypted_file_data = encoded_file_data.split(
         b":")
-
     encrypted_key = encrypted_key.decode()
     key = base64.urlsafe_b64decode(encrypted_key)
     fernet = Fernet(key)
