@@ -4,11 +4,14 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet
+from sys import argv
 
 
-def encode_file(file_path):
+def encode_file(file_path: str, pwd: str) -> str:
 
-    password = Fernet.generate_key()
+    if not pwd:
+
+        pwd = Fernet.generate_key()
 
     with open(file_path, 'rb') as file:
         file_data = file.read()
@@ -22,7 +25,7 @@ def encode_file(file_path):
         length=32,
         backend=default_backend()
     )
-    key = base64.urlsafe_b64encode(kdf.derive(password))
+    key = base64.urlsafe_b64encode(kdf.derive(pwd))
     encrypted_key = base64.urlsafe_b64encode(key).decode()
     fernet = Fernet(key)
     encrypted_file_data = fernet.encrypt(file_data)
@@ -37,5 +40,8 @@ def encode_file(file_path):
     return encoded_file_path
 
 
-path = input("Enter the path of the file you want to encrypt: ")
-encode_file(path)
+path = argv[1]
+password = argv[2] if len(argv) > 2 else None
+
+
+encode_file(path, password)
