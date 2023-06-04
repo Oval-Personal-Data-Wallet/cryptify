@@ -5,10 +5,10 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet
-from sys import argv
+from sys import argv, stdout, stderr
 
 
-def decode_file(encoded_file_path: str, pwd: bytes) -> str:
+def decode_file(encoded_file_path: str, pwd: bytes):
 
     # make sure file is an ovl file
     if not encoded_file_path.endswith(".ovl"):
@@ -39,14 +39,13 @@ def decode_file(encoded_file_path: str, pwd: bytes) -> str:
 
         with open(decrypted_file_path, "wb") as decrypted_file:
             decrypted_file.write(decrypted_file_data)
-        return decrypted_file_path
+        stdout.write(decrypted_file_path)
 
     except cryptography.fernet.InvalidToken:
-        print("Incorrect password")
-        return ""
+        stderr.write("Incorrect password")
 
 
 path = argv[1]
 password = bytes(argv[2], 'utf-8') if len(argv) > 2 else None
 
-print(decode_file(path, password))
+decode_file(path, password)

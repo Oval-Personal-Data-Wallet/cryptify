@@ -5,12 +5,12 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet
-from sys import argv
+from sys import argv, stdout
 
 FILE_BUFFER_SIZE = 500_000_000  # 500Mb
 
 
-def encode_file(file_path: str, pwd: bytes) -> (str, str):
+def encode_file(file_path: str, pwd: bytes) -> str:
     if not pwd:
         pwd = Fernet.generate_key()
 
@@ -51,10 +51,10 @@ def encode_file(file_path: str, pwd: bytes) -> (str, str):
     with open(encoded_file_path, "wb") as encoded_file:
         encoded_file.write(encoded_file_data)
 
-    return encoded_file_path, pwd
+    return str(pwd, "utf-8")
 
 
 path = argv[1]
 password = bytes(argv[2], 'utf-8') if len(argv) > 2 else None
 
-print(encode_file(path, password))
+stdout.write(encode_file(path, password))
