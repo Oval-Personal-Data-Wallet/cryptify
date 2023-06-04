@@ -5,15 +5,8 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet
 
-ACCEPTED_EXTENSIONS = ['txt', 'pdf', 'png',
-                       'jpg', 'jpeg', 'docx', 'xlsx', 'md', 'py']
-
 
 def encode_file(file_path):
-
-    if not any(file_path.endswith(ext) for ext in ACCEPTED_EXTENSIONS):
-        print(f"File extension not supported for file: {file_path}")
-        return
 
     password = Fernet.generate_key()
 
@@ -23,7 +16,7 @@ def encode_file(file_path):
 
     salt = os.urandom(16)
     kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256,
+        algorithm=hashes.SHA256(),
         iterations=100000,
         salt=salt,
         length=32,
