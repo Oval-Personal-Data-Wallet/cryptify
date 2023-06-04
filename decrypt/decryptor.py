@@ -12,7 +12,7 @@ def decode_file(encoded_file_path: str, pwd: bytes):
 
     # make sure file is an ovl file
     if not encoded_file_path.endswith(".ovl"):
-        print("File is not an ovl file")
+        stderr.write("File is not an ovl file")
 
     with open(encoded_file_path, "rb") as encoded_file:
         encoded_file_data = encoded_file.read()
