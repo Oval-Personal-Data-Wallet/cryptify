@@ -11,7 +11,7 @@ from sys import argv
 FILE_BUFFER_SIZE = 500_000_000  # 500Mb
 
 
-def encode_file(file_path: str, pwd: str) -> (str, str):
+def encode_file(file_path: str, pwd: bytes) -> (str, str):
     if not pwd:
         pwd = Fernet.generate_key()
 
@@ -57,6 +57,6 @@ def encode_file(file_path: str, pwd: str) -> (str, str):
 
 
 path = argv[1]
-password = argv[2] if len(argv) > 2 else None
+password = bytes(argv[2], 'utf-8') if len(argv) > 2 else None
 
 print(encode_file(path, password))
