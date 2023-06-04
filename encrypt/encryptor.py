@@ -1,6 +1,5 @@
 import os
 import base64
-import time
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -26,7 +25,7 @@ def encode_file(file_path: str, pwd: bytes) -> (str, str):
     )
 
     key = base64.urlsafe_b64encode(kdf.derive(pwd))
-    encrypted_key = base64.urlsafe_b64encode(key).decode()
+
     fernet = Fernet(key)
 
     encrypted_file_data = b""
@@ -45,8 +44,7 @@ def encode_file(file_path: str, pwd: bytes) -> (str, str):
 
             encrypted_file_data += fernet.encrypt(file_data)
 
-    encoded_file_data = encrypted_key.encode() + b":" + salt + b":" + \
-                        original_extension + b":" + encrypted_file_data
+    encoded_file_data = salt + b":" + original_extension + b":" + encrypted_file_data
 
     encoded_file_path = os.path.splitext(file_path)[0] + ".ovl"
 
